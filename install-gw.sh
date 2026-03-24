@@ -25,14 +25,13 @@ echo "Installed gw to $TARGET"
 
 SHELL_BLOCK_START="# >>> gw shell magic >>>"
 SHELL_BLOCK_END="# <<< gw shell magic <<<"
-read -r -d '' SHELL_BLOCK <<'EOF' || true
-# >>> gw shell magic >>>
+SHELL_BLOCK="# >>> gw shell magic >>>
+export PATH=\"$INSTALL_BIN_DIR:\$PATH\"
 gws() {
     local p
-    p="$(gw switch "$@")" && cd "$p"
+    p=\"\$(gw switch \"\$@\")\" && cd \"\$p\"
 }
-# <<< gw shell magic <<<
-EOF
+# <<< gw shell magic <<<"
 
 append_block_if_missing() {
     local rc_file="$1"
@@ -59,9 +58,8 @@ append_block_if_missing "$HOME/.zshrc"
 
 if ! echo ":$PATH:" | grep -q ":$INSTALL_BIN_DIR:"; then
     echo
-    echo "Note: $INSTALL_BIN_DIR is not currently in PATH."
-    echo "Add this to your shell config:"
-    echo "  export PATH=\"$INSTALL_BIN_DIR:\$PATH\""
+    echo "Note: $INSTALL_BIN_DIR has been added to PATH in your shell config."
+    echo "Reload your shell config to apply it in this session."
 fi
 
 echo
